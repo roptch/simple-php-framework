@@ -1,2 +1,2 @@
 # deezer-rest-api
-Deezer assignement. Goal: build a Rest API without any framework / API
+Deezer assignement. Goal: build a Rest API without any framework / libraries
