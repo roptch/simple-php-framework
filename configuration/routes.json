@@ -3,5 +3,10 @@
     "url":        "/hello/{name}",
     "controller": "app\\controllers\\IndexController",
     "action":     "helloAction"
+  },
+  {
+    "url":        "/user/{id}",
+    "controller": "app\\controllers\\UserController",
+    "action":     "getAction"
   }
 ]
