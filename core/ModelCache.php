@@ -7,4 +7,5 @@ class ModelCache {
   public $properties        = [];
   public $manyToMany        = [];
   public $additionalGetters = [];
+  public $additionalSetters = [];
 }

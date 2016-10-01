@@ -7,8 +7,10 @@ use core\ModelCache;
 abstract class Model {
   private static $db = null;
   private static $cache = [];
+  public $_mtmToUpdate = [];
 
-  public function getId();
+  abstract public function getId();
+  private function setId($id) {}
 
   public function __call($method, $args) {
     $model = self::initialize();
@@ -17,9 +19,141 @@ abstract class Model {
         && is_callable(self::$cache[$model]->additionalGetters[$method])) {
       return call_user_func_array(
         self::$cache[$model]->additionalGetters[$method], [$this->getId()]);
+    } else if (isset(self::$cache[$model]->additionalSetters[$method])
+               && is_callable(self::$cache[$model]->additionalSetters[$method])) {
+      return call_user_func_array(
+        self::$cache[$model]->additionalSetters[$method], [$this, $args]);
     } else {
       // TODO: error method doesn't exist
     }
+  }
+
+  public function delete() {
+    if ($this->getId() === null) {
+      return ;
+    }
+
+    $model = self::initialize();
+
+    $sql = "DELETE FROM " . self::_modelToSqlName($model) . "
+            WHERE " . self::_modelToSqlName($model) . ".id=?";
+    $query = self::$db->prepare($sql);
+    $query->execute([$this->getId()]);
+
+    if (count(self::$cache[$model]->manyToMany) > 0) {
+      $this->deleteMTMRelations($model);
+    }
+
+    $this->id = null;
+  }
+
+  private function deleteMTMRelations($model) {
+    $table = self::_modelToSqlName($model);
+    foreach (self::$cache[$model]->manyToMany as $attr => $toModel) {
+      $linkTable = self::getMTMLinkTableName($toModel);
+
+      $sql = "DELETE FROM " . $linkTable . "
+              WHERE " . $linkTable . "." . $table . "_id=?";
+      $query = self::$db->prepare($sql);
+      $query->execute([$this->getId()]);
+    }
+  }
+
+  public function save() {
+    $model = self::initialize();
+    $sql = '';
+    $values = [];
+
+    if ($this->getId() !== null) {
+      // Update
+      $sql = "UPDATE " . self::$cache[$model]->table . " SET";
+      foreach (self::$cache[$model]->properties as $property) {
+        if (count($values) > 0) {
+          $sql .= ',';
+        }
+        $sql .= " " . self::$cache[$model]->table . "."
+                . self::_modelToSqlName($property) . "=?";
+        $values[] = $this->$property;
+      }
+
+      $sql .= " WHERE " . self::$cache[$model]->table . ".id=?";
+      $values[] = $this->getId();
+    } else {
+      // Insert
+      $sql = "INSERT INTO " . self::$cache[$model]->table . "(";
+      $i = 0;
+      foreach (self::$cache[$model]->properties as $property) {
+        if ($property === 'id') {
+          continue ;
+        }
+        if ($i > 0) {
+          $sql .= ',';
+        }
+        $sql .= self::_modelToSqlName($property);
+        ++$i;
+      }
+      $sql .= ") VALUES(";
+      foreach (self::$cache[$model]->properties as $property) {
+        if ($property === 'id') {
+          continue ;
+        }
+        if (count($values) > 0) {
+          $sql .= ',';
+        }
+        $sql .= "?";
+        $values[] = $this->$property;
+      }
+      $sql .= ")";
+    }
+
+    $query = self::$db->prepare($sql);
+    $query->execute($values);
+
+    if ($this->getId() === null) {
+      $this->id = self::$db->lastInsertId();
+    }
+
+    if (count($this->_mtmToUpdate) > 0) {
+      $this->updateMtmRelations($model);
+    }
+  }
+
+  private function updateMtmRelations($model) {
+    foreach ($this->_mtmToUpdate as $attr => $entityList) {
+      $table = self::_modelToSqlName($model);
+      $toTable = self::_modelToSqlName(self::$cache[$model]->manyToMany[$attr]);
+
+      $linkTable = self::getMTMLinkTableName(self::$cache[$model]->manyToMany[$attr]);
+      $sql = "DELETE FROM " . $linkTable . "
+              WHERE " . $linkTable . "." . $table . "_id=?";
+      $query = self::$db->prepare($sql);
+      $query->execute([$this->getId()]);
+      echo $sql;
+
+      $sql = "INSERT INTO " . $linkTable . "(" . $table . "_id, " . $toTable . "_id)
+              VALUES ";
+
+      $value = [];
+      $i = 0;
+      foreach ($entityList as $entity) {
+        if ($entity->getId() === null)
+          continue;
+
+        if ($i > 0) {
+          $sql .= ',';
+        }
+
+        $sql .= "(?,?)";
+        $values[] = $this->getId();
+        $values[] = $entity->getId();
+        ++$i;
+      }
+
+      $query = self::$db->prepare($sql);
+      $query->execute($values);
+    }
+
+    $this->_mtmToUpdate = [];
   }
 
   public static function find($filters = []) {
@@ -116,12 +250,12 @@ abstract class Model {
       }
     }
 
-    self::generateManyToManyGetters($model);
+    self::generateMTMFuncs($model);
 
     return $model;
   }
 
-  private static function generateManyToManyGetters($model) {
+  private static function generateMTMFuncs($model) {
     $db = self::$db;
 
     foreach (self::$cache[$model]->manyToMany as $attr => $toModel) {
@@ -129,9 +263,7 @@ abstract class Model {
         function($id) use ($model, $toModel, $db) {
           $table = self::_modelToSqlName($model);
           $toTable = self::_modelToSqlName($toModel);
-          $linkTableArr = [$table, $toTable];
-          sort($linkTableArr);
-          $linkTable = implode('_', $linkTableArr);
+          $linkTable = self::getMTMLinkTableName($toModel);
 
           $sql = "SELECT " . $linkTable . "." . $toTable . "_id
                   FROM " . $linkTable . "
@@ -146,7 +278,21 @@ abstract class Model {
 
           return $toModel::find(['id' => $idList]);
         };
+      self::$cache[$model]->additionalSetters['set' . ucfirst($attr)] =
+        function($entity, $args) use ($attr) {
+          $entity->_mtmToUpdate[$attr] = $args[0];
+        };
     }
+  }
+
+  private static function getMTMLinkTableName($toModel) {
+    $table = self::_modelToSqlName(get_called_class());
+    $toTable = self::_modelToSqlName($toModel);
+    $linkTableArr = [$table, $toTable];
+    sort($linkTableArr);
+    $linkTable = implode('_', $linkTableArr);
+
+    return $linkTable;
   }
 
   public static function _modelToSqlName($model) {
