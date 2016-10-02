@@ -18,9 +18,21 @@
     "method":     "GET"
   },
   {
+    "url":        "/users",
+    "controller": "app\\controllers\\UserController",
+    "action":     "getAllUsersAction",
+    "method":     "GET"
+  },
+  {
     "url":        "/track/{id}",
     "controller": "app\\controllers\\TrackController",
     "action":     "getTrackAction",
+    "method":     "GET"
+  },
+  {
+    "url":        "/tracks",
+    "controller": "app\\controllers\\TrackController",
+    "action":     "getAllTracksAction",
     "method":     "GET"
   },
   {

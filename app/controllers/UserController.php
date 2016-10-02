@@ -24,6 +24,17 @@ class UserController extends Controller {
     }
   }
 
+  public function getAllUsersAction() {
+    $users = User::find();
+    $data = [];
+
+    foreach ($users as $user) {
+      $data[] = $user->getJsonFormatted();
+    }
+
+    return View::jsonResponse($data);
+  }
+
   public function getLovedAction($id) {
     $user = User::findOne(['id' => [$id]]);
 

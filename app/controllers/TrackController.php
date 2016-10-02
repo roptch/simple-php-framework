@@ -26,4 +26,15 @@ class TrackController extends Controller {
       ]);
     }
   }
+
+  public function getAllTracksAction() {
+    $tracks = Track::find();
+    $data = [];
+
+    foreach ($tracks as $track) {
+      $data[] = $track->getJsonFormatted();
+    }
+
+    return View::jsonResponse($data);
+  }
 }
