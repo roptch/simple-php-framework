@@ -114,11 +114,11 @@ abstract class Model {
     }
 
     if (count($this->_mtmToUpdate) > 0) {
-      $this->updateMtmRelations($model);
+      $this->updateMTMRelations($model);
     }
   }
 
-  private function updateMtmRelations($model) {
+  private function updateMTMRelations($model) {
     foreach ($this->_mtmToUpdate as $attr => $entityList) {
       $table = self::_modelToSqlName($model);
       $toTable = self::_modelToSqlName(self::$cache[$model]->manyToMany[$attr]);
@@ -166,6 +166,23 @@ abstract class Model {
     $entities = self::generateEntities($query->fetchAll(), $model);
 
     return $entities;
+  }
+
+  public static function findOne($filters = []) {
+    $model = self::initialize();
+
+    $sql = self::generateSelectQuery($model, $filters);
+    $sql .= " LIMIT 0, 1";
+    $query = self::$db->prepare($sql);
+    $query->execute(self::generateSqlValueArray($filters));
+
+    $entities = self::generateEntities($query->fetchAll(), $model);
+
+    if (count($entities) > 0) {
+      return $entities[0];
+    }
+
+    return null;
   }
 
   private static function generateSelectQuery($model, $args) {
