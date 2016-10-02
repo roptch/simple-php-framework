@@ -12,6 +12,11 @@ class TrackController extends Controller {
     parent::__construct();
   }
 
+  /**
+   * Retrieves a track data
+   * @param  int $id track identifier
+   * @return core\HttpResponse
+   */
   public function getTrackAction($id) {
     $track = Track::findOne(['id' => [$id]]);
     if ($track === null) {
@@ -27,6 +32,11 @@ class TrackController extends Controller {
     }
   }
 
+  /**
+   * Deletes a track
+   * @param  int $id track identifier
+   * @return core\HttpResponse
+   */
   public function deleteTrackAction($id) {
     $track = Track::findOne(['id' => [$id]]);
     if ($track === null) {
@@ -43,17 +53,10 @@ class TrackController extends Controller {
     ]);
   }
 
-  public function getAllUsersAction() {
-    $users = User::find();
-    $data = [];
-
-    foreach ($users as $user) {
-      $data[] = $user->getJsonFormatted();
-    }
-
-    return View::jsonResponse($data);
-  }
-
+  /**
+   * Retrieves all the existing tracks
+   * @return core\HttpResponse
+   */
   public function getAllTracksAction() {
     $tracks = Track::find();
     $data = [];
@@ -65,6 +68,10 @@ class TrackController extends Controller {
     return View::jsonResponse($data);
   }
 
+  /**
+   * Adds a new track
+   * @return core\HttpResponse
+   */
   public function addTrackAction() {
     $name     = $this->getRequest()->get('post', 'name');
     $duration = $this->getRequest()->get('post', 'duration');
@@ -88,5 +95,4 @@ class TrackController extends Controller {
     $response->setCode(201);
     return $response;
   }
-
 }

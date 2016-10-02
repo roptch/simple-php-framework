@@ -3,6 +3,7 @@
 namespace core;
 
 use core\Route;
+use core\AppException;
 
 class Router {
   private static $mandatoryRouteAttributes = [
@@ -20,21 +21,18 @@ class Router {
   public static function initialize($filename) {
     $data = file_get_contents($filename);
     if ($data === false) {
-      // TODO: error cannot read file
-      return ;
+      throw new AppException('Cannot read route file [' . $filename . ']');
     }
 
     $routes = json_decode($data);
     if ($routes === null) {
-      // TODO: error file not correctly formatted
-      return ;
+      throw new AppException('Route file [' . $filename . '] is not correctly JSON formatted');
     }
 
     foreach ($routes as $route) {
       foreach (self::$mandatoryRouteAttributes as $attr) {
         if (!isset($route->$attr)) {
-          // TODO: error missing attribute in route
-          return ;
+          throw new AppException('Missing attribute [' . $attr . '] in route configuration');
         }
       }
     }

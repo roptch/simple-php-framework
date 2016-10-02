@@ -3,12 +3,13 @@
 namespace core;
 
 use core\HttpResponse;
+use core\AppException;
 
 class View {
   public static function jsonResponse($data) {
     $json = json_encode($data);
     if ($json === false){
-      // TODO: error json encoding failed
+      throw new AppException('Couldn\'t encode response data as JSON');
     }
 
     $response = new HttpResponse();
@@ -18,8 +19,8 @@ class View {
   }
 
   public static function htmlResponse($templatePath, $data) {
-    if (!file_exists($templatePath)) {
-      // TODO: error missing template
+    if (!file_exists(ROOT_DIR . $templatePath)) {
+      throw new AppException('Template file [' . $templatePath . '] doesn\'t exist');
     }
 
     ob_start();

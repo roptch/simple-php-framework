@@ -4,6 +4,7 @@ namespace core;
 
 use core\Configuration;
 use core\ModelCache;
+use core\AppException;
 
 abstract class Model {
   private static $db = null;
@@ -25,7 +26,7 @@ abstract class Model {
       return call_user_func_array(
         self::$cache[$model]->additionalSetters[$method], [$this, $args]);
     } else {
-      // TODO: error method doesn't exist
+      throw new AppException('Calling undefined method [' . $method . '] in model [' . $model . ']');
     }
   }
 
@@ -252,8 +253,7 @@ abstract class Model {
 
       if (!isset($config->database->user) || !isset($config->database->password)
           || !isset($config->database->dbname) || !isset($config->database->host)) {
-        // TODO: error missing db config
-        return ;
+        throw new AppException('Missing database configuration attribute');
       }
 
       self::$db = new \PDO('mysql:host=' . $config->database->host . ';dbname='

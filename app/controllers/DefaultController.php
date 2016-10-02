@@ -13,6 +13,10 @@ class DefaultController extends Controller {
     parent::__construct();
   }
 
+  /**
+   * Index page
+   * @return core\HttpResponse
+   */
   public function indexAction() {
     $usersData = [];
     $tracksData = [];
@@ -41,12 +45,21 @@ class DefaultController extends Controller {
     ]);
   }
 
+  /**
+   * Hello test page
+   * @param  string $name
+   * @return core\HttpResponse
+   */
   public function helloAction($name) {
     return View::htmlResponse('/app/views/hello.php', [
       'name' => $name
     ]);
   }
 
+  /**
+   * Action called in case no route is found
+   * @return core\HttpResponse
+   */
   public function pageNotFoundAction() {
     $response = View::jsonResponse([
       'error' => '404 page not found'

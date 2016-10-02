@@ -1,0 +1,9 @@
+[03/10/2016 00:36:57] Test exception
+[03/10/2016 00:49:03] Test exception
+[03/10/2016 00:49:15] Test exception
+[03/10/2016 01:01:51] Configuration file [/opt/local/apache2/htdocs/deezer-rest-api/configuration/app.json] is not correctly JSON formatted
+[03/10/2016 01:01:59] Configuration file [/opt/local/apache2/htdocs/deezer-rest-api/configuration/app.json] is not correctly JSON formatted
+[03/10/2016 01:02:00] Configuration file [/opt/local/apache2/htdocs/deezer-rest-api/configuration/app.json] is not correctly JSON formatted
+[03/10/2016 01:02:01] Configuration file [/opt/local/apache2/htdocs/deezer-rest-api/configuration/app.json] is not correctly JSON formatted
+[03/10/2016 01:02:29] Template file [/app/views/index.php] doesn't exist
+[03/10/2016 01:03:31] Missing database configuration attribute

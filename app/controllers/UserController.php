@@ -13,6 +13,11 @@ class UserController extends Controller {
     parent::__construct();
   }
 
+  /**
+   * Retrives a user's data
+   * @param  int $id user identifier
+   * @return core\HttpResponse
+   */
   public function getUserAction($id) {
     $user = User::findOne(['id' => [$id]]);
     if ($user === null) {
@@ -26,6 +31,11 @@ class UserController extends Controller {
     }
   }
 
+  /**
+   * Deletes an existing user
+   * @param  int $id user identifier
+   * @return core\HttpResponse
+   */
   public function deleteUserAction($id) {
     $user = User::findOne(['id' => [$id]]);
     if ($user === null) {
@@ -42,6 +52,10 @@ class UserController extends Controller {
     ]);
   }
 
+  /**
+   * Retrieves all existing users
+   * @return core\HttpResponse
+   */
   public function getAllUsersAction() {
     $users = User::find();
     $data = [];
@@ -53,6 +67,10 @@ class UserController extends Controller {
     return View::jsonResponse($data);
   }
 
+  /**
+   * Adds a new user
+   * @return core\HttpResponse
+   */
   public function addUserAction() {
     $name = $this->getRequest()->get('post', 'name');
     $mail = $this->getRequest()->get('post', 'mail');
@@ -77,6 +95,11 @@ class UserController extends Controller {
     return $response;
   }
 
+  /**
+   * Retrives the loved tracks of a user
+   * @param  int $id user identifier
+   * @return core\HttpResponse
+   */
   public function getLovedAction($id) {
     $user = User::findOne(['id' => [$id]]);
 
@@ -96,6 +119,11 @@ class UserController extends Controller {
     }
   }
 
+  /**
+   * Adds a loved track for the user
+   * @param int $id user identifier
+   * @return core\HttpResponse
+   */
   public function addLovedAction($id) {
     $trackId = $this->getRequest()->get('post', 'track_id');
     if ($trackId === null) {
@@ -146,6 +174,12 @@ class UserController extends Controller {
     return $response;
   }
 
+  /**
+   * Deletes a loved track from the user's list
+   * @param  int $userId  user identifier
+   * @param  int $trackId track identifier
+   * @return core\HttpResponse
+   */
   public function deleteLovedAction($userId, $trackId) {
     $user = User::findOne(['id' => [$userId]]);
     if ($user === null) {
