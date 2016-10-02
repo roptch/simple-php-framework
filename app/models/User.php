@@ -13,6 +13,14 @@ class User extends Model {
     'loved' => 'app\\models\\Track'
   ];
 
+  public function getJsonFormatted() {
+    return [
+      'id'    => $this->getId(),
+      'name'  => $this->getName(),
+      'mail'  => $this->getMail()
+    ];
+  }
+
   public function getId() {
     return $this->id;
   }

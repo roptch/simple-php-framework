@@ -50,7 +50,7 @@ abstract class Model {
   private function deleteMTMRelations($model) {
     $table = self::_modelToSqlName($model);
     foreach (self::$cache[$model]->manyToMany as $attr => $toModel) {
-      $linkTable = self::getMTMLinkTableName($toModel);
+      $linkTable = self::_getMTMLinkTableName($toModel);
 
       $sql = "DELETE FROM " . $linkTable . "
               WHERE " . $linkTable . "." . $table . "_id=?";
@@ -123,7 +123,7 @@ abstract class Model {
       $table = self::_modelToSqlName($model);
       $toTable = self::_modelToSqlName(self::$cache[$model]->manyToMany[$attr]);
 
-      $linkTable = self::getMTMLinkTableName(self::$cache[$model]->manyToMany[$attr]);
+      $linkTable = self::_getMTMLinkTableName(self::$cache[$model]->manyToMany[$attr]);
       $sql = "DELETE FROM " . $linkTable . "
               WHERE " . $linkTable . "." . $table . "_id=?";
       $query = self::$db->prepare($sql);
@@ -280,7 +280,7 @@ abstract class Model {
         function($id) use ($model, $toModel, $db) {
           $table = self::_modelToSqlName($model);
           $toTable = self::_modelToSqlName($toModel);
-          $linkTable = self::getMTMLinkTableName($toModel);
+          $linkTable = self::_getMTMLinkTableName($toModel);
 
           $sql = "SELECT " . $linkTable . "." . $toTable . "_id
                   FROM " . $linkTable . "
@@ -302,7 +302,7 @@ abstract class Model {
     }
   }
 
-  private static function getMTMLinkTableName($toModel) {
+  public static function _getMTMLinkTableName($toModel) {
     $table = self::_modelToSqlName(get_called_class());
     $toTable = self::_modelToSqlName($toModel);
     $linkTableArr = [$table, $toTable];

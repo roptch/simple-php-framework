@@ -2,9 +2,14 @@
 
 namespace app\controllers;
 
+use core\Controller;
 use core\View;
 
-class DefaultController {
+class DefaultController extends Controller {
+  function __construct() {
+    parent::__construct();
+  }
+
   public function helloAction($name) {
     echo 'Hello ' . $name . '!';
   }

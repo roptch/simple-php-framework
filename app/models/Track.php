@@ -13,6 +13,14 @@ class Track extends Model {
     'lovedBy' => 'app\\models\\User'
   ];
 
+  public function getJsonFormatted() {
+    return [
+      'id'        => $this->getId(),
+      'name'      => $this->getName(),
+      'duration'  => $this->getDuration()
+    ];
+  }
+
   public function getId() {
     return $this->id;
   }

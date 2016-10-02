@@ -16,5 +16,11 @@
     "controller": "app\\controllers\\TrackController",
     "action":     "getTrackAction",
     "method":     "GET"
+  },
+  {
+    "url":        "/user/{id}/loved",
+    "controller": "app\\controllers\\UserController",
+    "action":     "getLovedAction",
+    "method":     "GET"
   }
 ]

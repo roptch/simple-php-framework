@@ -2,11 +2,16 @@
 
 namespace app\controllers;
 
+use core\Controller;
 use core\View;
 
 use app\models\User;
 
-class UserController {
+class UserController extends Controller {
+  function __construct() {
+    parent::__construct();
+  }
+
   public function getUserAction($id) {
     $user = User::findOne(['id' => [$id]]);
     if ($user === null) {
@@ -14,11 +19,26 @@ class UserController {
         'error' => 'User not found'
       ]);
     } else {
+      return View::jsonResponse($user->getJsonFormatted());
+    }
+  }
+
+  public function getLovedAction($id) {
+    $user = User::findOne(['id' => [$id]]);
+
+    if ($user === null) {
       return View::jsonResponse([
-        'id'    => $user->getId(),
-        'name'  => $user->getName(),
-        'mail'  => $user->getMail()
+        'error' => 'User not found'
       ]);
+    } else {
+      $loved = $user->getLoved();
+
+      $result = [];
+      foreach ($loved as $track) {
+        $result[] = $track->getJsonFormatted();
+      }
+
+      return View::jsonResponse($result);
     }
   }
 }
