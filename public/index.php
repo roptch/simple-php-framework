@@ -1,6 +1,7 @@
 <?php
 
 define('ROOT_DIR', dirname(dirname(__FILE__)));
+define('ROOT_URL', 'http://localhost/deezer-rest-api');
 
 use core\Router;
 use app\controllers\DefaultController;

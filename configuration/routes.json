@@ -22,5 +22,11 @@
     "controller": "app\\controllers\\UserController",
     "action":     "getLovedAction",
     "method":     "GET"
+  },
+  {
+    "url":        "/user/{id}/loved",
+    "controller": "app\\controllers\\UserController",
+    "action":     "addLovedAction",
+    "method":     "POST"
   }
 ]

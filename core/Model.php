@@ -128,7 +128,6 @@ abstract class Model {
               WHERE " . $linkTable . "." . $table . "_id=?";
       $query = self::$db->prepare($sql);
       $query->execute([$this->getId()]);
-      echo $sql;
 
       $sql = "INSERT INTO " . $linkTable . "(" . $table . "_id, " . $toTable . "_id)
               VALUES ";
