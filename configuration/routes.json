@@ -2,16 +2,19 @@
   {
     "url":        "/hello/{name}",
     "controller": "app\\controllers\\DefaultController",
-    "action":     "helloAction"
+    "action":     "helloAction",
+    "method":     "GET"
   },
   {
     "url":        "/user/{id}",
     "controller": "app\\controllers\\UserController",
-    "action":     "getUserAction"
+    "action":     "getUserAction",
+    "method":     "GET"
   },
   {
     "url":        "/track/{id}",
     "controller": "app\\controllers\\TrackController",
-    "action":     "getTrackAction"
+    "action":     "getTrackAction",
+    "method":     "GET"
   }
 ]

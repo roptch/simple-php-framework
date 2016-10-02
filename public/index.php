@@ -17,7 +17,7 @@ spl_autoload_register(function($class) {
 });
 
 Router::initialize(ROOT_DIR . '/configuration/routes.json');
-$route = Router::resolve($_GET['q']);
+$route = Router::resolve($_GET['q'], $_SERVER['REQUEST_METHOD']);
 
 if ($route === null) {
   $route = Router::getPageNotFoundRoute();
