@@ -15,8 +15,8 @@ class DefaultController extends Controller {
   }
 
   public function pageNotFoundAction() {
-    $response = View::htmlResponse('/app/views/404.php', [
-      'url' => $_GET['q']
+    $response = View::jsonResponse([
+      'error' => '404 page not found'
     ]);
     $response->setCode(404);
     return $response;
