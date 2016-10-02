@@ -1,8 +1,8 @@
 <?php
 
 define('ROOT_DIR', dirname(dirname(__FILE__)));
-define('ROOT_URL', 'http://localhost/deezer-rest-api');
 
+use core\Configuration;
 use core\Router;
 use app\controllers\DefaultController;
 
@@ -17,6 +17,7 @@ spl_autoload_register(function($class) {
   }
 });
 
+Configuration::initialize(ROOT_DIR . '/configuration/app.json');
 Router::initialize(ROOT_DIR . '/configuration/routes.json');
 $route = Router::resolve(isset($_GET['q']) ? ($_GET['q']) : ('/'), $_SERVER['REQUEST_METHOD']);
 

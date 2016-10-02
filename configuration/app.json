@@ -1,0 +1,9 @@
+{
+  "database": {
+    "user":     "root",
+    "password": "",
+    "host":     "localhost",
+    "dbname":   "deezer_api"
+  },
+  "log_level": "low"
+}

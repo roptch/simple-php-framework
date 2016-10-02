@@ -2,6 +2,7 @@
 
 namespace core;
 
+use core\Configuration;
 use core\ModelCache;
 
 abstract class Model {
@@ -247,8 +248,17 @@ abstract class Model {
     $model = get_called_class();
 
     if (self::$db === null) {
-      self::$db = new \PDO('mysql:host=localhost;dbname=deezer_api;charset=utf8',
-                          'root', '');
+      $config = Configuration::$config;
+
+      if (!isset($config->database->user) || !isset($config->database->password)
+          || !isset($config->database->dbname) || !isset($config->database->host)) {
+        // TODO: error missing db config
+        return ;
+      }
+
+      self::$db = new \PDO('mysql:host=' . $config->database->host . ';dbname='
+                  . $config->database->dbname . ';charset=utf8',
+                  $config->database->user, $config->database->password);
     }
 
     if (isset(self::$cache[$model]))

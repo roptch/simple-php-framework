@@ -19,7 +19,7 @@ class Router {
    */
   public static function initialize($filename) {
     $data = file_get_contents($filename);
-    if ($filename === false) {
+    if ($data === false) {
       // TODO: error cannot read file
       return ;
     }
@@ -32,7 +32,7 @@ class Router {
 
     foreach ($routes as $route) {
       foreach (self::$mandatoryRouteAttributes as $attr) {
-        if (empty($route->$attr)) {
+        if (!isset($route->$attr)) {
           // TODO: error missing attribute in route
           return ;
         }
