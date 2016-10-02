@@ -25,7 +25,7 @@ class Router {
     }
 
     $routes = json_decode($data);
-    if ($data === null) {
+    if ($routes === null) {
       // TODO: error file not correctly formatted
       return ;
     }
@@ -49,7 +49,7 @@ class Router {
    * @return {array|null} controller/action/parameters to call
    */
   public static function resolve($url, $method) {
-    $urlParts = explode('/', $url);
+    $urlParts = ($url === '/') ? (['']) : (explode('/', $url));
 
     foreach (self::$routes as $route) {
       if ($route->method !== $method)

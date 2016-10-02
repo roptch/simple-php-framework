@@ -1,0 +1,23 @@
+* {
+  margin:   0;
+  padding:  0;
+}
+
+body {
+  padding-top:  20px;
+  padding-left: 20px;
+}
+
+table {
+  margin-bottom:    50px;
+  border-collapse:  collapse;
+}
+
+table td {
+  padding: 4px;
+  border: 1px solid black;
+}
+
+ul li {
+  list-style-type: none;
+}

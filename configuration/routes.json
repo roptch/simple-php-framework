@@ -1,5 +1,11 @@
 [
   {
+    "url":        "/",
+    "controller": "app\\controllers\\DefaultController",
+    "action":     "indexAction",
+    "method":     "GET"
+  },
+  {
     "url":        "/hello/{name}",
     "controller": "app\\controllers\\DefaultController",
     "action":     "helloAction",

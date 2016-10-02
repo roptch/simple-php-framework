@@ -17,14 +17,9 @@ class View {
     return $response;
   }
 
-  public static function htmlResponse($templatePath, $args) {
+  public static function htmlResponse($templatePath, $data) {
     if (!file_exists($templatePath)) {
       // TODO: error missing template
-    }
-
-    $data = [];
-    foreach ($args as $key => $value) {
-      $data[$key] = htmlspecialchars($value);
     }
 
     ob_start();
