@@ -10,8 +10,10 @@ class DefaultController {
   }
 
   public function pageNotFoundAction() {
-    return View::htmlResponse('/app/views/404.php', [
+    $response = View::htmlResponse('/app/views/404.php', [
       'url' => $_GET['q']
     ]);
+    $response->setCode(404);
+    return $response;
   }
 }
