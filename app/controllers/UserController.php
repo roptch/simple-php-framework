@@ -2,24 +2,24 @@
 
 namespace app\controllers;
 
+use core\View;
+
 use app\models\User;
 use app\models\Track;
 
 class UserController {
-  public function getAction($id) {
+  public function getUserAction($id) {
     $user = User::findOne(['id' => [$id]]);
-    var_dump($user);
-    // $user->delete();
-    // var_dump($user);
-    // var_dump($user[0]->getLoved());
-    // $user[0]->setName('dreamstate');
-    // $user[0]->save();
-    // $track = Track::find(['id' => [3]])[0];
-    // var_dump($track);
-    //
-    // $user = User::find(['id' => [1]])[0];
-    // $user->setLoved([$track]);
-    // $user->save();
-    // echo $user->getId();
+    if ($user === null) {
+      return View::jsonResponse([
+        'error' => 'User not found'
+      ]);
+    } else {
+      return View::jsonResponse([
+        'id'    => $user->getId(),
+        'name'  => $user->getName(),
+        'mail'  => $user->getMail()
+      ]);
+    }
   }
 }

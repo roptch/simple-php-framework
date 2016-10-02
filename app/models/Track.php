@@ -13,10 +13,25 @@ class Track extends Model {
     'lovedBy' => 'app\\models\\User'
   ];
 
-  function __construct() {
-  }
-
   public function getId() {
     return $this->id;
+  }
+
+  public function getName() {
+    return $this->name;
+  }
+
+  public function setName($name) {
+    $this->name = $name;
+    return $this;
+  }
+
+  public function getDuration() {
+    return $this->duration;
+  }
+
+  public function setDuration($duration) {
+    $this->duration = $duration;
+    return $this;
   }
 }

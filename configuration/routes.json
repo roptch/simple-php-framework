@@ -7,6 +7,6 @@
   {
     "url":        "/user/{id}",
     "controller": "app\\controllers\\UserController",
-    "action":     "getAction"
+    "action":     "getUserAction"
   }
 ]

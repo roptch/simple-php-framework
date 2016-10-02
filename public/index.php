@@ -21,4 +21,5 @@ if ($route === null) {
 }
 
 $controller = new $route['controller'];
-call_user_func_array([$controller, $route['action']], $route['params']);
+$response = call_user_func_array([$controller, $route['action']], $route['params']);
+$response->send();

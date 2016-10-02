@@ -13,18 +13,25 @@ class User extends Model {
     'loved' => 'app\\models\\Track'
   ];
 
-  function __construct() {
-  }
-
   public function getId() {
     return $this->id;
   }
 
+  public function getName() {
+    return $this->name;
+  }
+
   public function setName($name) {
     $this->name = $name;
+    return $this;
+  }
+
+  public function getMail() {
+    return $this->mail;
   }
 
   public function setMail($mail) {
     $this->mail = $mail;
+    return $this;
   }
 }
