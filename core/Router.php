@@ -2,6 +2,8 @@
 
 namespace core;
 
+use core\Route;
+
 class Router {
   private static $mandatoryRouteAttributes = ['url', 'controller', 'action'];
   private static $routes = [];
@@ -37,7 +39,7 @@ class Router {
 
   /**
    * Returns the route concerning the url passed in parameter
-   * if it has matched one
+   * if it has matched one, or null if not found
    * @param  {string} $url
    * @return {array|null} controller/action/parameters to call
    */
@@ -65,14 +67,14 @@ class Router {
 
       // Route found
       if ($i === count($urlParts)) {
-        return [
-          'controller'  => $route->controller,
-          'action'      => $route->action,
-          'params'      => $paramStack
-        ];
+        return new Route($route->controller, $route->action, $paramStack);
       }
     }
 
     return null;
+  }
+
+  public static function getPageNotFoundRoute() {
+    return new Route('app\\controllers\\DefaultController', 'pageNotFoundAction');
   }
 }

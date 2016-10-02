@@ -2,6 +2,9 @@
 
 define('ROOT_DIR', dirname(dirname(__FILE__)));
 
+use core\Router;
+use app\controllers\DefaultController;
+
 // Simple autoloading
 spl_autoload_register(function($class) {
   $file = ROOT_DIR . '/' . str_replace('\\', '/', $class) . '.php';
@@ -13,13 +16,14 @@ spl_autoload_register(function($class) {
   }
 });
 
-core\Router::initialize(ROOT_DIR . '/configuration/routes.json');
-$route = core\Router::resolve($_GET['q']);
+Router::initialize(ROOT_DIR . '/configuration/routes.json');
+$route = Router::resolve($_GET['q']);
 
 if ($route === null) {
-  // TODO: 404
+  $route = Router::getPageNotFoundRoute();
 }
 
-$controller = new $route['controller'];
-$response = call_user_func_array([$controller, $route['action']], $route['params']);
+$controllerName = $route->getController();
+$controller = new $controllerName();
+$response = call_user_func_array([$controller, $route->getAction()], $route->getParams());
 $response->send();

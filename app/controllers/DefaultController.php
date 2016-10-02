@@ -2,8 +2,12 @@
 
 namespace app\controllers;
 
-class IndexController {
+class DefaultController {
   public function helloAction($name) {
     echo 'Hello ' . $name . '!';
+  }
+
+  public function pageNotFoundAction() {
+    echo 'Page not found';
   }
 }

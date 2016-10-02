@@ -1,7 +1,7 @@
 [
   {
     "url":        "/hello/{name}",
-    "controller": "app\\controllers\\IndexController",
+    "controller": "app\\controllers\\DefaultController",
     "action":     "helloAction"
   },
   {
