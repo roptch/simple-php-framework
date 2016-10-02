@@ -8,5 +8,10 @@
     "url":        "/user/{id}",
     "controller": "app\\controllers\\UserController",
     "action":     "getUserAction"
+  },
+  {
+    "url":        "/track/{id}",
+    "controller": "app\\controllers\\TrackController",
+    "action":     "getTrackAction"
   }
 ]

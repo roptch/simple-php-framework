@@ -5,7 +5,6 @@ namespace app\controllers;
 use core\View;
 
 use app\models\User;
-use app\models\Track;
 
 class UserController {
   public function getUserAction($id) {
