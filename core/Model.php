@@ -132,7 +132,7 @@ abstract class Model {
       $sql = "INSERT INTO " . $linkTable . "(" . $table . "_id, " . $toTable . "_id)
               VALUES ";
 
-      $value = [];
+      $values = [];
       $i = 0;
       foreach ($entityList as $entity) {
         if ($entity->getId() === null)

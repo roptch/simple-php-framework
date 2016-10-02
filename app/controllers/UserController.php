@@ -90,7 +90,40 @@ class UserController extends Controller {
       'success' => 'Track added successfully to the list'
     ]);
     $response->setCode(201); // Created
-    $response->setHeader('Location', ROOT_URL . '/user/' . $user->getId() . '/loved');
     return $response;
+  }
+
+  public function deleteLovedAction($userId, $trackId) {
+    $user = User::findOne(['id' => [$userId]]);
+    if ($user === null) {
+      $response = View::jsonResponse([
+        'error' => 'User "' . $id . '" not found'
+      ]);
+      $response->setCode(404);
+      return $response;
+    }
+
+    $loved = $user->getLoved();
+    $newLoved = [];
+    foreach ($loved as $lovedTrack) {
+      if ($lovedTrack->getId() !== $trackId) {
+        $newLoved[] = $lovedTrack;
+      }
+    }
+
+    if (count($loved) === count($newLoved)) {
+      $response = View::jsonResponse([
+        'error' => 'Track "' . $trackId . '" is not in user "' . $userId . '"\'s list'
+      ]);
+      $response->setCode(404);
+      return $response;
+    }
+
+    $user->setLoved($newLoved);
+    $user->save();
+
+    return View::jsonResponse([
+      'success' => 'Track removed successfully from the list'
+    ]);
   }
 }

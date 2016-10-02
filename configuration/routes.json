@@ -28,5 +28,11 @@
     "controller": "app\\controllers\\UserController",
     "action":     "addLovedAction",
     "method":     "POST"
+  },
+  {
+    "url":        "/user/{userId}/loved/{trackId}",
+    "controller": "app\\controllers\\UserController",
+    "action":     "deleteLovedAction",
+    "method":     "DELETE"
   }
 ]
