@@ -16,12 +16,30 @@ class UserController extends Controller {
   public function getUserAction($id) {
     $user = User::findOne(['id' => [$id]]);
     if ($user === null) {
-      return View::jsonResponse([
+      $response = View::jsonResponse([
         'error' => 'User not found'
       ]);
+      $response->setCode(404);
+      return $response;
     } else {
       return View::jsonResponse($user->getJsonFormatted());
     }
+  }
+
+  public function deleteUserAction($id) {
+    $user = User::findOne(['id' => [$id]]);
+    if ($user === null) {
+      $response = View::jsonResponse([
+        'error' => 'User not found'
+      ]);
+      $response->setCode(404);
+      return $response;
+    }
+
+    $user->delete();
+    return View::jsonResponse([
+      'success' => 'User removed successfully'
+    ]);
   }
 
   public function getAllUsersAction() {
@@ -33,6 +51,30 @@ class UserController extends Controller {
     }
 
     return View::jsonResponse($data);
+  }
+
+  public function addUserAction() {
+    $name = $this->getRequest()->get('post', 'name');
+    $mail = $this->getRequest()->get('post', 'mail');
+
+    if ($name === null || $mail === null) {
+      $response = View::jsonResponse([
+        'error' => 'Missing parameter(s)'
+      ]);
+      $response->setCode(404);
+      return $response;
+    }
+
+    $user = new User();
+    $user->setName($name);
+    $user->setMail($mail);
+    $user->save();
+
+    $response = View::jsonResponse([
+      'success' => 'User created with id "' . $user->getId() . '"'
+    ]);
+    $response->setCode(201);
+    return $response;
   }
 
   public function getLovedAction($id) {

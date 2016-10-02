@@ -18,10 +18,22 @@
     "method":     "GET"
   },
   {
+    "url":        "/user/{id}",
+    "controller": "app\\controllers\\UserController",
+    "action":     "deleteUserAction",
+    "method":     "DELETE"
+  },
+  {
     "url":        "/users",
     "controller": "app\\controllers\\UserController",
     "action":     "getAllUsersAction",
     "method":     "GET"
+  },
+  {
+    "url":        "/users",
+    "controller": "app\\controllers\\UserController",
+    "action":     "addUserAction",
+    "method":     "POST"
   },
   {
     "url":        "/track/{id}",
@@ -30,10 +42,22 @@
     "method":     "GET"
   },
   {
+    "url":        "/track/{id}",
+    "controller": "app\\controllers\\TrackController",
+    "action":     "deleteTrackAction",
+    "method":     "DELETE"
+  },
+  {
     "url":        "/tracks",
     "controller": "app\\controllers\\TrackController",
     "action":     "getAllTracksAction",
     "method":     "GET"
+  },
+  {
+    "url":        "/tracks",
+    "controller": "app\\controllers\\TrackController",
+    "action":     "addTrackAction",
+    "method":     "POST"
   },
   {
     "url":        "/user/{id}/loved",
