@@ -5,6 +5,8 @@ Goal: build a Rest API without any existing framework / libraries.
 
 A "mini modulable MVC framework" is implemented in order to cleanly build the API.
 
+Hosted on http://deezer-api.pichot.fr for testing.
+
 ### Usage
 
 * PHP 5.6
