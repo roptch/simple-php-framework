@@ -5,8 +5,16 @@ namespace core;
 use core\AppException;
 
 class Configuration {
-  public static $config = [];
+  /**
+   * Contains the configuration as an object
+   * @var \stdClass
+   */
+  public static $config;
 
+  /**
+   * Reads the configuration file, decodes it and stores it
+   * @param  string $filename Path to the configuration file
+   */
   public static function initialize($filename) {
     $data = file_get_contents($filename);
     if ($data === false) {

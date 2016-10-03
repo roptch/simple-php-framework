@@ -7,13 +7,33 @@ use core\ModelCache;
 use core\AppException;
 
 abstract class Model {
+  /**
+   * PDO connection
+   * @var \PDO
+   */
   private static $db = null;
+
+  /**
+   * Model cached data
+   * @var array
+   */
   private static $cache = [];
+
+  /**
+   * Many to many relations to update in the next save()
+   * @var array
+   */
   public $_mtmToUpdate = [];
 
   abstract public function getId();
   private function setId($id) {}
 
+  /**
+   * Used to call the dynamically added methods (many2many getters/setters)
+   * @param  string $method Method name
+   * @param  array $args   Arguments to pass
+   * @return mixed
+   */
   public function __call($method, $args) {
     $model = self::initialize();
 
@@ -30,6 +50,9 @@ abstract class Model {
     }
   }
 
+  /**
+   * Deletes the entity from the database
+   */
   public function delete() {
     if ($this->getId() === null) {
       return ;
@@ -49,6 +72,10 @@ abstract class Model {
     $this->id = null;
   }
 
+  /**
+   * Deletes many to many relation links of the entity
+   * @param  string $model Current model name of the entity
+   */
   private function deleteMTMRelations($model) {
     $table = self::_modelToSqlName($model);
     foreach (self::$cache[$model]->manyToMany as $attr => $toModel) {
@@ -61,6 +88,9 @@ abstract class Model {
     }
   }
 
+  /**
+   * Saves an entity to db. If it doesn't exist, creates it
+   */
   public function save() {
     $model = self::initialize();
     $sql = '';
@@ -120,6 +150,10 @@ abstract class Model {
     }
   }
 
+  /**
+   * Deletes all many to many relation links and creates the ones needed
+   * @param  string $model Current model name of the entity
+   */
   private function updateMTMRelations($model) {
     foreach ($this->_mtmToUpdate as $attr => $entityList) {
       $table = self::_modelToSqlName($model);
@@ -157,6 +191,11 @@ abstract class Model {
     $this->_mtmToUpdate = [];
   }
 
+  /**
+   * Retrieves the entities using the filters
+   * @param  array $filters Filters. It's a 2 dimensional array (first dimension: column names, second dimension: values)
+   * @return array          Array of entities
+   */
   public static function find($filters = []) {
     $model = self::initialize();
 
@@ -169,6 +208,11 @@ abstract class Model {
     return $entities;
   }
 
+  /**
+   * Retrieves only one entity using the filters
+   * @param  array $filters Filters. It's a 2 dimensional array (first dimension: column names, second dimension: values)
+   * @return Model|null     Either the found entity or null if nothing is found
+   */
   public static function findOne($filters = []) {
     $model = self::initialize();
 
@@ -186,6 +230,12 @@ abstract class Model {
     return null;
   }
 
+  /**
+   * Using the filters, generate the sql query to retrives entities from the db
+   * @param  string $model Name of the model we are searching
+   * @param  array  $args  Filters
+   * @return string        Sql query
+   */
   private static function generateSelectQuery($model, $args) {
     $sql = "SELECT " . self::$cache[$model]->table . ".*
             FROM " . self::$cache[$model]->table;
@@ -217,6 +267,11 @@ abstract class Model {
     return $sql;
   }
 
+  /**
+   * Builds a list containing all the values contained in the filters
+   * @param  array $filters
+   * @return array
+   */
   private static function generateSqlValueArray($filters) {
     $result = [];
 
@@ -229,6 +284,12 @@ abstract class Model {
     return $result;
   }
 
+  /**
+   * Given the results of the sql query, creates the corresponding entities
+   * @param  array $sqlResults Results given by \PDO::fetchAll
+   * @param  string $model     Name of the model we are using
+   * @return array             Array of resulting entities
+   */
   private static function generateEntities($sqlResults, $model) {
     $entities = [];
 
@@ -245,6 +306,9 @@ abstract class Model {
     return $entities;
   }
 
+  /**
+   * Caching data concerning the model used, generating many to many function, connecting to db
+   */
   private static function initialize() {
     $model = get_called_class();
 
@@ -281,12 +345,16 @@ abstract class Model {
     return $model;
   }
 
+  /**
+   * Generates one getter and one setter for each many to many relationships
+   * @param  string $model Name of the model we are using
+   */
   private static function generateMTMFuncs($model) {
     $db = self::$db;
 
     foreach (self::$cache[$model]->manyToMany as $attr => $toModel) {
       self::$cache[$model]->additionalGetters['get' . ucfirst($attr)] =
-        function($id) use ($model, $toModel, $db) {
+        function($id) use ($model, $toModel, $db) { // M2M Getter
           $table = self::_modelToSqlName($model);
           $toTable = self::_modelToSqlName($toModel);
           $linkTable = self::_getMTMLinkTableName($toModel);
@@ -305,12 +373,19 @@ abstract class Model {
           return $toModel::find(['id' => $idList]);
         };
       self::$cache[$model]->additionalSetters['set' . ucfirst($attr)] =
-        function($entity, $args) use ($attr) {
+        function($entity, $args) use ($attr) { // M2M Setter
+          // Caching the list of related entities, it will be updated in db on the next save()
           $entity->_mtmToUpdate[$attr] = $args[0];
         };
     }
   }
 
+  /**
+   * Computes the name of the many to many links table
+   * It is the names of the 2 tables, ordered alphabetically and splitted by an underscore
+   * @param  string $toModel Target model of the relationship
+   * @return string          Name of the link table
+   */
   public static function _getMTMLinkTableName($toModel) {
     $table = self::_modelToSqlName(get_called_class());
     $toTable = self::_modelToSqlName($toModel);
@@ -321,6 +396,14 @@ abstract class Model {
     return $linkTable;
   }
 
+  /**
+   * Computes the name of a table/column from the name of a model/attribute
+   * It is lowercase and each part is splitted by underscores
+   * The name of a model is CamelCase
+   * The name of an attribute is camelCase
+   * @param  string $model Model or attribute name
+   * @return string        Table or column name
+   */
   public static function _modelToSqlName($model) {
     $modelPath = explode('\\', $model);
     $modelName = end($modelPath);

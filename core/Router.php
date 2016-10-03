@@ -6,17 +6,26 @@ use core\Route;
 use core\AppException;
 
 class Router {
+  /**
+   * Attributes needed in each route configuration
+   * @var array
+   */
   private static $mandatoryRouteAttributes = [
     'url',
     'controller',
     'action',
     'method'
   ];
+
+  /**
+   * Contains all the routes extracted from the configuration file
+   * @var array
+   */
   private static $routes = [];
 
   /**
    * Extract routes from a json config file
-   * @param  {string} $filename
+   * @param  string $filename
    */
   public static function initialize($filename) {
     $data = file_get_contents($filename);
@@ -43,8 +52,8 @@ class Router {
   /**
    * Returns the route concerning the url passed in parameter
    * if it has matched one, or null if not found
-   * @param  {string} $url
-   * @return {array|null} controller/action/parameters to call
+   * @param  string $url
+   * @return core\Route|null Route to call
    */
   public static function resolve($url, $method) {
     $urlParts = ($url === '/') ? (['']) : (explode('/', $url));
@@ -80,6 +89,10 @@ class Router {
     return null;
   }
 
+  /**
+   * Specifically returns the route for the 404 page
+   * @return core\Route
+   */
   public static function getPageNotFoundRoute() {
     return new Route('app\\controllers\\DefaultController', 'pageNotFoundAction');
   }

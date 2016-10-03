@@ -6,6 +6,11 @@ use core\HttpResponse;
 use core\AppException;
 
 class View {
+  /**
+   * Build an http response to display json data
+   * @param  array $data Data to be formatted to json
+   * @return core\HttpResponse
+   */
   public static function jsonResponse($data) {
     $json = json_encode($data);
     if ($json === false){
@@ -18,6 +23,12 @@ class View {
     return $response;
   }
 
+  /**
+   * Builds an http response to display an html page
+   * @param  string $templatePath Template file containing html/php code
+   * @param  array $data          Data to be used in the template with the $data[] variable
+   * @return core\HttpResponse
+   */
   public static function htmlResponse($templatePath, $data) {
     if (!file_exists(ROOT_DIR . $templatePath)) {
       throw new AppException('Template file [' . $templatePath . '] doesn\'t exist');
