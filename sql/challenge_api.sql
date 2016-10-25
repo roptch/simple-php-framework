@@ -17,10 +17,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `deezer_api`
+-- Database: `challenge_api`
 --
-CREATE DATABASE IF NOT EXISTS `deezer_api` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `deezer_api`;
+CREATE DATABASE IF NOT EXISTS `challenge_api` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `challenge_api`;
 
 -- --------------------------------------------------------
 
