@@ -1,8 +1,11 @@
 # no-framework-rest-api
 Challenge to build a Rest API without any existing framework / libraries.
+
 It should: list users, list tracks, add loved tracks of a user in his playlist.
 
 A "mini modulable MVC framework" is implemented in order to cleanly build the API.
+
+Hosted on http://challenge-api.pichot.fr for testing.
 
 ### Usage
 
