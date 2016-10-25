@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Deezer Rest API</title>
+    <title>Challenge Rest API</title>
     <link rel="stylesheet" href="style/index.css" media="screen" charset="utf-8">
   </head>
   <body>

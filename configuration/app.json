@@ -3,6 +3,6 @@
     "user":     "root",
     "password": "",
     "host":     "localhost",
-    "dbname":   "deezer_api"
+    "dbname":   "challenge_api"
   }
 }
