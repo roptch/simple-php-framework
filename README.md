@@ -1,11 +1,7 @@
-# deezer-rest-api
-Deezer interview assignment.
-
-Goal: build a Rest API without any existing framework / libraries.
+# no-framework-rest-api
+Challenge to build a Rest API without any existing framework / libraries.
 
 A "mini modulable MVC framework" is implemented in order to cleanly build the API.
-
-Hosted on http://deezer-api.pichot.fr for testing.
 
 ### Usage
 
