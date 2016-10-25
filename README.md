@@ -1,5 +1,6 @@
 # no-framework-rest-api
 Challenge to build a Rest API without any existing framework / libraries.
+It should: list users, list tracks, add loved tracks of a user in his playlist.
 
 A "mini modulable MVC framework" is implemented in order to cleanly build the API.
 
@@ -8,7 +9,7 @@ A "mini modulable MVC framework" is implemented in order to cleanly build the AP
 * PHP 5.6
 * Apache 2 *with mod_rewrite*
 * Change `/configuration/app.json`
-* Import database structure located in `/sql/deezer_api.sql`
+* Import database structure located in `/sql/challenge_api.sql`
 * `chmod 666 /logs/log.txt`
 
 ### Routes available
